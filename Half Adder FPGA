@@ -1,0 +1,53 @@
+v file
+/* Verilog for halfAdder
+Ali Jawad
+4_26_24
+alijawad@uat.edu */
+module halfadder(a, b, s, co); // define veriables
+input a, b; // 2 inputs
+output s, co; // 2 outputs summ and carry out
+assign s = a ^ b; // xor gate to calculate summ
+assign co = a & b; // and gate to calculate carryout
+endmodule
+_tb.v
+module halfadder_tb; // test bench fine
+wire t_s;
+wire t_co; // hardware definishin
+reg t_a, t_b; // processor register definition
+localparam DURATION = 30; // processing time 30 ps
+halfadder my_adder(.a(t_a), .b(t_b), .s(t_s), .co(t_co));
+initial
+begin // truth table of AND gate
+ $monitor(t_a, t_b, t_s, t_co);
+ t_a = 1'b0; // a = 0, b = 0
+ t_b = 1'b0;
+
+ #5 // s = 1, co = 0
+ t_a = 1'b1; // a = 1, b = 0
+ t_b = 1'b0;
+
+ #5 // s = 1, co = 0
+ t_a = 1'b0; // a = 0, b = 1
+ t_b = 1'b1;
+
+ #5 // s = 0, co = 1
+ t_a = 1'b1; // a = 1, b = 1
+ t_b = 1'b1;
+ #5 // repeat the first value scan
+ t_a = 1'b0;
+ t_b = 1'b0;
+
+end
+initial begin
+ //create simulation output file
+ $dumpfile("halfadder_tb.vcd");
+ $dumpvars(0,halfadder_tb);
+
+ //wait for given amount of time for simulation to complete
+ #(DURATION)
+
+ //Notify and end simulation
+ $display("Finished!");
+ $finish;
+end
+endmodule 
